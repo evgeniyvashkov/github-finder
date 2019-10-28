@@ -6,6 +6,7 @@ import Users from './components/Users/Users';
 import Search from './components/Users/Search';
 
 import './App.css';
+import { throwStatement } from '@babel/types';
 
 class App extends Component {
   state = {
@@ -13,24 +14,22 @@ class App extends Component {
     loading: false
   }
 
-  async componentDidMount() {
-    // this.setState({ loading: true });
-    // const users = await axios.get(`https://api.github.com/users?client_id=${process.env.REACT_APP_GITHUB_CLIENT_ID}&client_secret=${process.env.REACT_APP_GITHUB_CLIENT_ID}`);
-    // this.setState({ loading: false, users: users.data });
-  }
-
+  //search users on submit form
   searchUsers = async (text) => {
     this.setState({ loading: true });
     const users = await axios.get(`https://api.github.com/search/users?q=${text}&client_id=${process.env.REACT_APP_GITHUB_CLIENT_ID}&client_secret=${process.env.REACT_APP_GITHUB_CLIENT_ID}`);
-    this.setState({ loading: false, users: users.data });
+    this.setState({ loading: false, users: users.data.items });
   }
+
+  //delete users from state
+  deleteUsers = () => this.setState({ users: [] })
 
   render() {
     return (
       <div className="App" >
         <Navbar />
-        <div className="users container" style={styleUsersComponent}>
-          <Search searchUsers={this.searchUsers} />
+        <div className="users container">
+          <Search searchUsers={this.searchUsers} deleteUsers={this.deleteUsers} showClear={this.state.users.length > 0} />
           <Users loading={this.state.loading} users={this.state.users} />
         </div>
       </div>
@@ -38,10 +37,7 @@ class App extends Component {
   }
 }
 
-const styleUsersComponent = {
-  display: "grid",
-  gridTemplateColumns: 'repeat(3,1fr)',
-  gridGap: "1rem"
-}
-
 export default App;
+
+
+//cbtn btn-light btn -block 
