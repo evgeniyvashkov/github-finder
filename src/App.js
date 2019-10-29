@@ -4,14 +4,15 @@ import axios from 'axios';
 import Navbar from './components/Layout/Navbar';
 import Users from './components/Users/Users';
 import Search from './components/Users/Search';
+import Alert from './components/Layout/Alert'
 
 import './App.css';
-import { throwStatement } from '@babel/types';
 
 class App extends Component {
   state = {
     users: [],
-    loading: false
+    loading: false,
+    alert: null
   }
 
   //search users on submit form
@@ -24,12 +25,26 @@ class App extends Component {
   //delete users from state
   deleteUsers = () => this.setState({ users: [] })
 
+  //show alert
+  showAlert = (message, type) => {
+    this.setState({ alert: { message, type } });
+    setTimeout(() => {
+      this.setState({alert: null})
+    }, 3000)
+  }
+
   render() {
     return (
       <div className="App" >
         <Navbar />
         <div className="users container">
-          <Search searchUsers={this.searchUsers} deleteUsers={this.deleteUsers} showClear={this.state.users.length > 0} />
+          {this.state.alert && <Alert alert={this.state.alert} />}
+          <Search
+            searchUsers={this.searchUsers}
+            deleteUsers={this.deleteUsers}
+            showClear={this.state.users.length > 0} 
+            showAlert={this.showAlert}
+            />
           <Users loading={this.state.loading} users={this.state.users} />
         </div>
       </div>

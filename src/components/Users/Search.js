@@ -7,8 +7,12 @@ class Search extends Component {
 
   onSubmit = event => {
     event.preventDefault();
-    this.props.searchUsers(this.state.text);
-    this.setState({ text: "" });
+    if (this.state.text) {
+      this.props.searchUsers(this.state.text);
+      this.setState({ text: "" });
+    } else {
+      this.props.showAlert('The field can\'t to be empty', 'light');
+    }
   };
 
   onChange = event => {

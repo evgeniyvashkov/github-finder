@@ -2,9 +2,6 @@ import React from 'react';
 
 import Spinner from '../Layout/Spinner';
 import UserItem from './UserItem';
-import Search from './Search'
-
-
 
 const Users = ({ loading, users }) => {
     if (loading) {
@@ -17,11 +14,6 @@ const Users = ({ loading, users }) => {
         )
     }
 }
-// <div className="users container" style={styleUsersComponent}>
-{/* <Search /> */ }
-// {loading ? <Spinner /> : users.map(user => <UserItem key={user.id} user={user} />)}
-
-// </div>
 
 const styleUsersComponent = {
     display: "grid",
