@@ -1,10 +1,13 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
+import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
+
 import axios from 'axios';
 
 import Navbar from './components/Layout/Navbar';
 import Users from './components/Users/Users';
 import Search from './components/Users/Search';
 import Alert from './components/Layout/Alert'
+import About from './components/Pages/About'
 
 import './App.css';
 
@@ -29,25 +32,34 @@ class App extends Component {
   showAlert = (message, type) => {
     this.setState({ alert: { message, type } });
     setTimeout(() => {
-      this.setState({alert: null})
+      this.setState({ alert: null })
     }, 3000)
   }
 
   render() {
     return (
-      <div className="App" >
-        <Navbar />
-        <div className="users container">
-          {this.state.alert && <Alert alert={this.state.alert} />}
-          <Search
-            searchUsers={this.searchUsers}
-            deleteUsers={this.deleteUsers}
-            showClear={this.state.users.length > 0} 
-            showAlert={this.showAlert}
-            />
-          <Users loading={this.state.loading} users={this.state.users} />
+      <Router>
+        <div className="App" >
+          <Navbar />
+          <Switch>
+            <Route exact path='/' render={props =>
+              <Fragment>
+                <div className="users container">
+                  {this.state.alert && <Alert alert={this.state.alert} />}
+                  <Search
+                    searchUsers={this.searchUsers}
+                    deleteUsers={this.deleteUsers}
+                    showClear={this.state.users.length > 0}
+                    showAlert={this.showAlert}
+                  />
+                  <Users loading={this.state.loading} users={this.state.users} />
+                </div>
+              </Fragment>
+            } />
+            <Route path='/about' component={About} />
+          </Switch>
         </div>
-      </div>
+      </Router>
     );
   }
 }
@@ -55,4 +67,4 @@ class App extends Component {
 export default App;
 
 
-//cbtn btn-light btn -block 
+    //cbtn btn-light btn -block 
