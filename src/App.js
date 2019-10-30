@@ -48,35 +48,36 @@ class App extends Component {
   render() {
     return (
       <Router>
-        <div className="App" >
+        <div className="app" >
           <Navbar />
-          <Switch>
-            <Route exact path='/' render={props =>
-              <Fragment>
-                <div className="users container">
-                  {this.state.alert && <Alert alert={this.state.alert} />}
-                  <Search
-                    searchUsers={this.searchUsers}
-                    deleteUsers={this.deleteUsers}
-                    showClear={this.state.users.length > 0}
-                    showAlert={this.showAlert}
-                  />
-                  <Users loading={this.state.loading} users={this.state.users} getUser={this.getUser} />
-                </div>
-              </Fragment>
-            } />
-            <Route path='/about' component={About} />
-            <Route path='/user/:login' render={props =>
-              <User {...props} getUser={this.getUser} user={this.state.user} loading={this.state.loading} />
-            } />
-          </Switch>
+
+          <div className="container">
+            <Switch>
+              <Route exact path='/' render={props =>
+                <Fragment>
+                  <div className="users">
+                    {this.state.alert && <Alert alert={this.state.alert} />}
+                    <Search
+                      searchUsers={this.searchUsers}
+                      deleteUsers={this.deleteUsers}
+                      showClear={this.state.users.length > 0}
+                      showAlert={this.showAlert}
+                    />
+                    <Users loading={this.state.loading} users={this.state.users} getUser={this.getUser} />
+                  </div>
+                </Fragment>
+              } />
+              <Route path='/about' component={About} />
+              <Route path='/user/:login' render={props =>
+                <User {...props} getUser={this.getUser} user={this.state.user} loading={this.state.loading} />
+              } />
+            </Switch>
+          </div>
         </div>
       </Router>
+
     );
   }
 }
 
 export default App;
-
-
-    //cbtn btn-light btn -block 
