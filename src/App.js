@@ -40,7 +40,6 @@ class App extends Component {
     this.setState({ loading: true });
     const repos = await axios.get(
       `https://api.github.com/users/${username}/repos?per_page=5&sort=created:asc&client_id=${process.env.REACT_APP_GITHUB_CLIENT_ID}&client_secret=${process.env.REACT_APP_GITHUB_CLIENT_ID}`);
-    console.log(repos.data)
     this.setState({ loading: false, repos: repos.data });
   }
 
