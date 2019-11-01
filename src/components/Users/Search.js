@@ -1,57 +1,47 @@
-import React, { Component } from "react";
+import React, { useState } from "react";
 
-class Search extends Component {
-  state = {
-    text: ""
-  };
+const Search = ({ searchUsers, showClear, deleteUsers, showAlert }) => {
+  const [text, setText] = useState('');
 
-  onSubmit = event => {
+  const onSubmit = event => {
     event.preventDefault();
 
-    if (this.state.text) {
-      this.props.searchUsers(this.state.text);
-      this.setState({ text: "" });
+    if (text) {
+      searchUsers(text);
+      setText('');
     } else {
-      this.props.showAlert('The field can\'t to be empty', 'light');
+      showAlert('The field can\'t to be empty', 'light');
     }
   };
 
-  onChange = event => {
-    this.setState({
-      [event.target.name]: event.target.value
-    });
-  };
+  const onChange = event => setText(event.target.value)
 
-  render() {
-    const { deleteUsers, showClear } = this.props;
-
-    return (
-      <form
-        className="users__search-form"
-        onSubmit={this.onSubmit}
-        style={formStyles}
-      >
-        <input
-          type="text"
-          name="text"
-          value={this.state.text}
-          placeholder="Search users..."
-          onChange={this.onChange}
-        />
-        <input
-          type="submit"
-          className="btn btn-dark btn-block"
-          placeholder="Search"
-        />
-        {showClear && (
-          <button className="btn btn-light btn-block" onClick={deleteUsers}>
-            clear
+  return (
+    <form
+      className="users__search-form"
+      onSubmit={onSubmit}
+      style={formStyles}>
+      <input
+        type="text"
+        name="text"
+        value={text}
+        placeholder="Search users..."
+        onChange={onChange}
+      />
+      <input
+        type="submit"
+        className="btn btn-dark btn-block"
+        placeholder="Search"
+      />
+      {showClear && (
+        <button className="btn btn-light btn-block" onClick={deleteUsers}>
+          clear
           </button>
-        )}
-      </form>
-    );
-  }
+      )}
+    </form>
+  )
 }
+
 
 const formStyles = {
   gridColumn: "1/4"
