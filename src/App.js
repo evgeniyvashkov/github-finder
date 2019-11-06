@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import React, { Fragment, useState } from 'react';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
 
 import axios from 'axios';
@@ -12,87 +12,90 @@ import User from './components/Users/User';
 
 import './App.css';
 
-class App extends Component {
-  state = {
-    users: [],
-    user: {},
-    repos: [],
-    loading: false,
-    alert: null
-  }
+const App = () => {
+  const [users, setUsers] = useState([]);
+  const [user, setUser] = useState({});
+  const [repos, setRepos] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [alert, setAlert] = useState(null);
 
   //search users on submit form
-  searchUsers = async (text) => {
-    this.setState({ loading: true });
+  const searchUsers = async (text) => {
+    setLoading(true);
+
     const users = await axios.get(`https://api.github.com/search/users?q=${text}&client_id=${process.env.REACT_APP_GITHUB_CLIENT_ID}&client_secret=${process.env.REACT_APP_GITHUB_CLIENT_ID}`);
-    this.setState({ loading: false, users: users.data.items });
+
+    setUsers(users.data.items);
+    setLoading(false);
   }
 
   //get single user
-  getUser = async (username) => {
-    this.setState({ loading: true });
+  const getUser = async (username) => {
+    setLoading(true);
+
     const user = await axios.get(`https://api.github.com/users/${username}?client_id=${process.env.REACT_APP_GITHUB_CLIENT_ID}&client_secret=${process.env.REACT_APP_GITHUB_CLIENT_ID}`);
-    this.setState({ loading: false, user: user.data });
+
+    setUser(user.data);
+    setLoading(false);
   }
 
   //get user's repos
-  getUserRepos = async (username) => {
-    this.setState({ loading: true });
+  const getUserRepos = async (username) => {
+    setLoading(true);
+
     const repos = await axios.get(
       `https://api.github.com/users/${username}/repos?per_page=5&sort=created:asc&client_id=${process.env.REACT_APP_GITHUB_CLIENT_ID}&client_secret=${process.env.REACT_APP_GITHUB_CLIENT_ID}`);
-    this.setState({ loading: false, repos: repos.data });
+    setRepos(repos.data);
+    setLoading(false);
   }
 
   //delete users from state
-  deleteUsers = () => this.setState({ users: [] })
+  const deleteUsers = () => setUsers([]);
 
   //show alert
-  showAlert = (message, type) => {
-    this.setState({ alert: { message, type } });
+  const showAlert = (message, type) => {
+    setAlert({message, type})
+
     setTimeout(() => {
-      this.setState({ alert: null })
+      setAlert(null)
     }, 3000)
   }
 
-  render() {
-    const {loading, users, user, repos} = this.state;
-    return (
-      <Router>
-        <div className="app" >
-          <Navbar />
+  return (
+    <Router>
+      <div className="app" >
+        <Navbar />
 
-          <div className="container">
-            <Switch>
-              <Route exact path='/' render={props =>
-                <Fragment>
-                  <div className="users">
-                    {this.state.alert && <Alert alert={this.state.alert} />}
-                    <Search
-                      searchUsers={this.searchUsers}
-                      deleteUsers={this.deleteUsers}
-                      showClear={users.length > 0}
-                      showAlert={this.showAlert}
-                    />
-                    <Users loading={loading} users={users} getUser={this.getUser} />
-                  </div>
-                </Fragment>
-              } />
-              <Route path='/about' component={About} />
-              <Route path='/user/:login' render={props =>
-                <User {...props}
-                  getUser={this.getUser}
-                  getUserRepos={this.getUserRepos}
-                  user={user}
-                  repos={repos}
-                  loading={loading} />
-              } />
-            </Switch>
-          </div>
+        <div className="container">
+          <Switch>
+            <Route exact path='/' render={props =>
+              <Fragment>
+                <div className="users">
+                  {alert && <Alert alert={alert} />}
+                  <Search
+                    searchUsers={searchUsers}
+                    deleteUsers={deleteUsers}
+                    showClear={users.length > 0}
+                    showAlert={showAlert}
+                  />
+                  <Users loading={loading} users={users} getUser={getUser} />
+                </div>
+              </Fragment>
+            } />
+            <Route path='/about' component={About} />
+            <Route path='/user/:login' render={props =>
+              <User {...props}
+                getUser={getUser}
+                getUserRepos={getUserRepos}
+                user={user}
+                repos={repos}
+                loading={loading} />
+            } />
+          </Switch>
         </div>
-      </Router>
-
-    );
-  }
+      </div>
+    </Router>
+  )
 }
 
 export default App;
