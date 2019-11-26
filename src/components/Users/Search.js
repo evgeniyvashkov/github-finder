@@ -1,13 +1,16 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
+import GithubContext from '../../context/github/githubContext';
 
-const Search = ({ searchUsers, showClear, deleteUsers, showAlert }) => {
+const Search = ({ showAlert }) => {
+  const githubContext = useContext(GithubContext)
+
   const [text, setText] = useState('');
 
   const onSubmit = event => {
     event.preventDefault();
 
     if (text) {
-      searchUsers(text);
+      githubContext.searchUsers(text);
       setText('');
     } else {
       showAlert('The field can\'t to be empty', 'light');
