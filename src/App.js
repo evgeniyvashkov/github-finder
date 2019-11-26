@@ -9,6 +9,7 @@ import Search from './components/Users/Search';
 import Alert from './components/Layout/Alert'
 import About from './components/Pages/About'
 import User from './components/Users/User';
+import GithubState from './context/github/GithubState';
 
 import './App.css';
 
@@ -62,6 +63,7 @@ const App = () => {
   }
 
   return (
+    <GithubState>
     <Router>
       <div className="app" >
         <Navbar />
@@ -95,6 +97,7 @@ const App = () => {
         </div>
       </div>
     </Router>
+    </GithubState>
   )
 }
 
